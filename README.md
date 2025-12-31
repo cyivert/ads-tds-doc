@@ -204,12 +204,22 @@ The 9 numbers at the end are a math concept called a "rotation matrix." Unless y
 
 Notice the `-- 1` at the end? This is a **comment** - it helps you keep track of the order!
 
+**Simple way (just X, Y, Z):**
 ```lua
-TDS:Place("Tower 1", X, Y, Z, 1,0,0,0,1,0,0,0,1) -- 1
-TDS:Place("Tower 2", X, Y, Z, 1,0,0,0,1,0,0,0,1) -- 2
-TDS:Place("Tower 3", X, Y, Z, 1,0,0,0,1,0,0,0,1) -- 3
-TDS:Place("Tower 4", X, Y, Z, 1,0,0,0,1,0,0,0,1) -- 4
-TDS:Place("Tower 5", X, Y, Z, 1,0,0,0,1,0,0,0,1) -- 5
+TDS:Place("Tower 1", 0.5, 1.8, 42.0) -- 1
+TDS:Place("Tower 2", 2.3, 1.8, 35.5) -- 2
+TDS:Place("Tower 3", 4.1, 1.8, 28.0) -- 3
+TDS:Place("Tower 4", 5.9, 1.8, 20.5) -- 4
+TDS:Place("Tower 5", 7.7, 1.8, 13.0) -- 5
+```
+
+**OR with rotation matrix (if you need it):**
+```lua
+TDS:Place("Tower 1", 0.5, 1.8, 42.0, 1,0,0,0,1,0,0,0,1) -- 1
+TDS:Place("Tower 2", 2.3, 1.8, 35.5, 1,0,0,0,1,0,0,0,1) -- 2
+TDS:Place("Tower 3", 4.1, 1.8, 28.0, 1,0,0,0,1,0,0,0,1) -- 3
+TDS:Place("Tower 4", 5.9, 1.8, 20.5, 1,0,0,0,1,0,0,0,1) -- 4
+TDS:Place("Tower 5", 7.7, 1.8, 13.0, 1,0,0,0,1,0,0,0,1) -- 5
 ```
 
 **Why number them?** Because future functions will refer to towers by their placement number (like "upgrade tower #2" or "sell tower #3").
