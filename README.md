@@ -175,18 +175,30 @@ TDS:Place("Military Base", 0.7064, 1.8626, 42.2678, 1,0,0,0,1,0,0,0,1) -- 1
 ### Understanding the Place Function
 
 ```lua
+TDS:Place(TowerName, X, Y, Z)
+-- OR with optional rotation:
 TDS:Place(TowerName, X, Y, Z, RotationMatrix)
 ```
 
-| Parameter | What It Is | Example |
-|-----------|-----------|---------|
-| Tower Name | The name of your tower | `"Military Base"` |
-| X, Y, Z | Coordinates where it goes | `0.7064, 1.8626, 42.2678` |
-| Rotation Matrix | How the tower is rotated | `1,0,0,0,1,0,0,0,1` (just use this default) |
+| Parameter | What It Is | Required? | Example |
+|-----------|-----------|-----------|---------|
+| Tower Name | The name of your tower | Yes | `"Military Base"` |
+| X, Y, Z | Coordinates where it goes | **Yes** | `0.7064, 1.8626, 42.2678` |
+| Rotation Matrix | How the tower is rotated | No (Optional) | `1,0,0,0,1,0,0,0,1` |
 
 **About the Rotation Matrix:**
 
-The last 9 numbers control tower rotation. Don't worry too much about this - just use `1,0,0,0,1,0,0,0,1` as the default. It's a math thing!
+⚠️ **Most users don't need this!** The rotation matrix controls tower rotation, but **it's completely optional**. In most cases, you only need to specify the X, Y, Z coordinates:
+
+```lua
+-- Simple way (recommended for beginners)
+TDS:Place("Military Base", 0.7064, 1.8626, 42.2678)
+
+-- With rotation (only if you need specific rotation)
+TDS:Place("Military Base", 0.7064, 1.8626, 42.2678, 1,0,0,0,1,0,0,0,1)
+```
+
+The 9 numbers at the end are a math concept called a "rotation matrix." Unless you're doing something advanced, just skip it and use only X, Y, Z!
 
 ### Tracking Tower Placements
 
