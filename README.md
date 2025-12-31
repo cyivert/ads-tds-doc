@@ -228,17 +228,43 @@ TDS:Place("Tower 5", 7.7, 1.8, 13.0, 1,0,0,0,1,0,0,0,1) -- 5
 
 After placing towers, you'll want to upgrade them to make them stronger!
 
+**Basic Upgrade (Path 1 - Default):**
 ```lua
 TDS:Upgrade(5)
 ```
+This upgrades tower #5 by one level along path 1 (the default path).
 
-This upgrades tower #5 by one level.
-
+**Upgrade with Specific Path:**
 ```lua
 TDS:Upgrade(6, 2)
 ```
+This upgrades tower #6 along **path 2** instead of path 1.
 
-This upgrades tower #6 along the **upgrade path 2** instead of path 1. (Some towers have different upgrade paths - choose which one!)
+**Real-World Example - Hacker Tower:**
+
+Some towers have special upgrade paths at the end. The **Hacker** tower is a great example:
+
+```lua
+TDS:Place("Hacker", 0.5, 1.8, 42.0) -- 1
+
+-- Upgrade it multiple times (path 1 - damage focused)
+TDS:Upgrade(1)  -- Upgrade 1
+TDS:Upgrade(1)  -- Upgrade 2
+TDS:Upgrade(1)  -- Upgrade 3
+TDS:Upgrade(1)  -- Upgrade 4
+TDS:Upgrade(1, 1)  -- Upgrade 5, Path 1 = Damage Variant ⚡
+
+-- OR for support variant instead:
+TDS:Upgrade(1, 2)  -- Upgrade 5, Path 2 = Support Variant 🛡️
+```
+
+**How Upgrade Paths Work:**
+
+- Most upgrades progress normally
+- **At certain "milestone" upgrades**, the tower splits into two paths
+- **Path 1** = Usually the damage/offensive variant
+- **Path 2** = Usually the support/utility variant
+- You choose which path by specifying the path number in the `TDS:Upgrade()` function
 
 ---
 
