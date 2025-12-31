@@ -502,16 +502,6 @@ For completely hands-off play, add the script to your executor's **Autoexec** fo
 
 ## Troubleshooting & Tips
 
-### "No HTTP Function" Error
-
-**Problem:** Script fails with "No HTTP Function" message
-
-**Solution:** Your executor doesn't support HTTP requests. Use one of these instead:
-- Wave
-- Xeno
-- Delta
-- Arceus X
-
 ### Towers Not Placing
 
 **Problem:** Towers don't appear on the map
