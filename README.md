@@ -6,20 +6,41 @@ Welcome! This guide will help you understand and use the TDS AutoStrat script. D
 
 ## Table of Contents
 
-1. [Configuration](#configuration)
-2. [Webhook Settings (Optional)](#webhook-settings-optional)
-3. [Loading the TDS Library](#loading-the-tds-library)
-4. [Setting Up Your Game (Loadout, Mode, Map)](#setting-up-your-game)
-5. [Building Your Strategy](#building-your-strategy)
-6. [API Reference](#api-reference)
-7. [Advanced Features](#advanced-features)
-8. [Troubleshooting & Tips](#troubleshooting--tips)
+1. [Getting Started](#getting-started)
+2. [Installation & Configuration](#installation--configuration)
+3. [Understanding Data Types](#understanding-data-types)
+4. [Loading the TDS Library](#loading-the-tds-library)
+5. [Setting Up Your Game](#setting-up-your-game)
+6. [New Feature: Multiplayer & Multi-Mode](#new-feature-multiplayer--multi-mode)
+7. [Building Your Strategy](#building-your-strategy)
+8. [Tower Management](#tower-management)
+9. [Special Abilities & Advanced Controls](#special-abilities--advanced-controls)
+10. [Game Speed & Performance](#game-speed--performance)
+11. [Discord Webhooks (Optional)](#discord-webhooks-optional)
+12. [Advanced Features](#advanced-features)
+13. [Troubleshooting & Tips](#troubleshooting--tips)
 
 ---
 
-## Configuration
+## Getting Started
 
-The configuration section lets you control how the script behaves. Think of it like the **settings menu** of your script!
+**What is TDS AutoStrat?**
+
+TDS AutoStrat is a script that automates your Tower Defense Strategy gameplay. It can:
+- Automatically place towers at specific locations
+- Upgrade and manage towers during the game
+- Activate special abilities
+- Skip waves automatically
+- Log your match results to Discord
+- Play 24/7 without you having to do anything
+
+Think of it like a **"recipe"** for winning - you write out the steps, and the script executes them perfectly every time!
+
+---
+
+## Installation & Configuration
+
+Before the script runs, you need to set up basic configuration. Think of it like the **settings menu** of your script!
 
 ### Basic Settings
 
@@ -27,6 +48,7 @@ The configuration section lets you control how the script behaves. Think of it l
 _G.AutoStrat = true
 _G.AutoSkip = false
 _G.AutoPickups = true
+_G.AntiLag = true
 ```
 
 ### What Each Setting Does
@@ -39,41 +61,17 @@ _G.AutoPickups = true
 | `_G.AutoStrat` | true/false | Runs the strategy automatically without you having to do anything |
 | `_G.AutoSkip` | true/false | Automatically votes to skip waves (if your game library supports it) |
 | `_G.AutoPickups` | true/false | Automatically collects dropped items and cash that fall on the ground |
+| `_G.AntiLag` | true/false | Reduces lag by removing unnecessary visual effects |
 
-### Understanding Data Types
+---
+
+## Understanding Data Types
 
 The script uses **data types** - these are different kinds of information:
 
 - **(bool)** = Boolean - Only two choices: `true` or `false` (like an on/off switch)
 - **(string)** = Text - Words, sentences, links (written in quotes like `"hello"`)
 - **(number)** = Numbers - Coordinates, amounts, values
-
----
-
-## Webhook Settings (Optional)
-
-Webhooks let the script send you updates to Discord when matches finish!
-
-```lua
-_G.SendWebhook = false 
-_G.Webhook = "WEBHOOK_URL_HERE"
-```
-
-### How to Set Up Discord Webhooks
-
-1. **`_G.SendWebhook`** - Turn notifications on/off
-   - `true` = You'll get Discord messages when matches end
-   - `false` = No Discord messages
-
-2. **`_G.Webhook`** - Your Discord webhook link
-   - Replace `"WEBHOOK_URL_HERE"` with your actual Discord webhook URL
-   - The URL should look something like: `https://discord.com/api/webhooks/123456789/abcdefg...`
-
-**How to Get Your Webhook URL:**
-- Go to your Discord server
-- Right-click a channel → Edit Channel → Integrations → Webhooks
-- Create a new webhook and copy the URL
-- Paste it into the `_G.Webhook` setting
 
 ---
 
@@ -157,6 +155,82 @@ Broke, Jailed, Inflation
 ```
 
 Each modifier changes how the enemies behave - stronger, faster, hidden, etc.
+
+---
+
+## New Feature: Multiplayer & Multi-Mode
+
+**NEW!** You can now create strategies for multiplayer sessions that are completely automated!
+
+### Understanding Multiplayer Setup
+
+Multiplayer games require:
+1. **A host** - The player who selects the map and starts the game
+2. **Clients** - Players who join the host's game
+3. **A party code** - A password so everyone can find each other
+
+### Step 1: Set the Multiplayer Mode
+
+Use `TDS:MultiMode(difficulty, totalplayers)` to set up a multiplayer game:
+
+```lua
+TDS:MultiMode("Easy", 3)  -- Easy difficulty for 3 players
+TDS:MultiMode("Hardcore", 4)  -- Hardcore for 4 players
+```
+
+### Step 2: Join as Host or Client
+
+Use `TDS:Multiplayer(role, partycode)` to join the lobby:
+
+```lua
+TDS:Multiplayer("host", "MYCODE")    -- You're the host
+TDS:Multiplayer("client", "MYCODE")  -- You're a client
+```
+
+**What Each Role Does:**
+
+- **"host"**: You select the map and settings. Must have VIP. Add `TDS:GameInfo("MAPNAME", {})` after this.
+- **"client"**: You join the host's game. Add `TDS:StartGame()` after this.
+
+**Important:** Everyone in your team must use the **exact same party code**!
+
+### Multiplayer Example - 3-Player Team
+
+Here's a complete example with 3 players:
+
+**Player 1 (Host - VIP):**
+```lua
+TDS:MultiMode("Easy", 3)
+TDS:Multiplayer("host", "AUTOSTRAT")
+TDS:GameInfo("U-Turn", {})
+TDS:Loadout("Tower1", "Tower2", "Tower3", "Tower4", "Tower5")
+-- ... rest of your strategy
+```
+
+**Player 2 (Client):**
+```lua
+TDS:MultiMode("Easy", 3)
+TDS:Multiplayer("client", "AUTOSTRAT")
+TDS:StartGame()
+TDS:Loadout("Tower1", "Tower2", "Tower3", "Tower4", "Tower5")
+-- ... rest of your strategy
+```
+
+**Player 3 (Client):**
+```lua
+TDS:MultiMode("Easy", 3)
+TDS:Multiplayer("client", "AUTOSTRAT")
+TDS:StartGame()
+TDS:Loadout("Tower1", "Tower2", "Tower3", "Tower4", "Tower5")
+-- ... rest of your strategy
+```
+
+### Key Points for Multiplayer
+
+- The **host** selects the map and difficulty
+- **All clients** must use the same party code to join
+- Everyone can have different tower loadouts and strategies
+- The game starts when the host is ready and all clients vote "ready"
 
 ---
 
@@ -268,32 +342,25 @@ TDS:Upgrade(1, 2)  -- Upgrade 5, Path 2 = Support Variant 🛡️
 
 ---
 
-## API Reference
+## Tower Management
 
-This section lists all the functions you can use to control the script. Think of these as "commands" you can give to the script.
+Once towers are placed, you can manage them during gameplay!
 
-### Core Engine Methods
+### Selling Towers
 
-These are the main functions that do things in the game.
-
-#### Placing & Selling
+Remove towers from the map to get your money back:
 
 ```lua
-TDS:Place(name, x, y, z)     -- Places a tower at the given position
-TDS:Sell(index)              -- Sells tower #index
-TDS:SellAll()                -- Sells all towers
+TDS:Sell(1)       -- Sells tower #1
+TDS:SellAll()     -- Sells ALL towers at once
 ```
 
-#### Upgrading
+### Setting Tower Targeting
+
+Control how towers aim at enemies:
 
 ```lua
-TDS:Upgrade(index, path)     -- Upgrades tower #index (path 1 or 2)
-```
-
-#### Targeting
-
-```lua
-TDS:SetTarget(index, mode)   -- Sets how tower targets enemies
+TDS:SetTarget(1, "Strong")  -- Tower #1 targets the strongest enemy
 ```
 
 **Targeting Modes:**
@@ -304,42 +371,9 @@ TDS:SetTarget(index, mode)   -- Sets how tower targets enemies
 "Random"  - Targets randomly
 ```
 
-#### Game Speed
+### Setting Tower Options
 
-```lua
-TDS:TimeScale(value)         -- Changes game speed
-```
-
-**Valid Speeds:**
-```
-0.5  -- Half speed
-1    -- Normal speed (default)
-1.5  -- 1.5x faster
-2    -- Double speed
-```
-
-#### Waves & Waves
-
-```lua
-TDS:VoteSkip(wave)           -- Votes to skip to a specific wave
-TDS:GetWave()                -- Returns the current wave number
-TDS:RestartGame()            -- Triggers the game restart
-```
-
-#### Lobby Functions
-
-```lua
-TDS:Loadout(...)             -- Sets which towers you bring
-TDS:Mode(difficulty)         -- Sets game difficulty
-TDS:GameInfo(map, modifiers) -- Sets map and modifiers
-TDS:StartGame()              -- Starts the game from lobby
-```
-
----
-
-### SetOption Function
-
-Use this for towers that have special options or settings.
+Some towers have special options or settings:
 
 ```lua
 TDS:SetOption(index, "OptionName", "Value", requiredWave)
@@ -347,7 +381,7 @@ TDS:SetOption(index, "OptionName", "Value", requiredWave)
 
 **Tower Options:**
 
-**1. Mercenary Base**
+**1. Mercenary Base / Military Base**
 ```lua
 TDS:SetOption(1, "Unit 1", "Grenadier")  -- or 2, 3 for different units
 -- Options: "Grenadier", "Rifleman", "Riot Guard", "Field Medic"
@@ -365,9 +399,11 @@ TDS:SetOption(3, "Track", "Green")       -- or "Red", "Purple"
 
 ---
 
-### Ability Function
+## Special Abilities & Advanced Controls
 
-Special towers have special abilities. Use this to trigger them!
+### Activating Special Abilities
+
+Special towers have unique abilities. Use this to trigger them!
 
 ```lua
 TDS:Ability(index, "AbilityName", data, loop)
@@ -380,7 +416,7 @@ TDS:Ability(index, "AbilityName", data, loop)
 - `data` = Extra information the ability needs (optional)
 - `loop` = `true` to repeat the ability automatically, `false` to use it once
 
-#### Tower Abilities
+### Tower Ability Reference
 
 **Commander**
 ```lua
@@ -444,15 +480,103 @@ TDS:Ability(2, "Airstrike", {
 })
 ```
 
----
+### AutoChain - Automated Ability Chains
 
-### AutoChain Function
-
-This makes towers use their abilities in a chain automatically!
+Make towers use their abilities in sequence automatically!
 
 ```lua
 TDS:AutoChain(1, 2, 3)     -- Towers 1, 2, and 3 use their abilities in order
 ```
+
+This is perfect for creating chains where one tower's ability triggers before another!
+
+### Wave Management
+
+```lua
+TDS:GetWave()              -- Returns the current wave number
+TDS:VoteSkip(10)           -- Votes to skip, waits until wave 10 to skip
+TDS:RestartGame()          -- Triggers game restart after match ends
+```
+
+---
+
+## Game Speed & Performance
+
+### Controlling Game Speed
+
+Change how fast the game runs:
+
+```lua
+TDS:TimeScale(2)           -- 2x speed (double speed)
+TDS:TimeScale(1)           -- 1x speed (normal)
+TDS:TimeScale(0.5)         -- 0.5x speed (half speed)
+```
+
+**Valid Speeds:**
+```
+0.5  -- Half speed
+1    -- Normal speed (default)
+1.5  -- 1.5x faster
+2    -- Double speed
+```
+
+### Unlocking Speed Tickets
+
+If you have timescale tickets, unlock speed control:
+
+```lua
+TDS:UnlockTimeScale()      -- Unlocks speed control if you have tickets
+```
+
+### Anti-Lag Feature
+
+Reduce lag by disabling unnecessary visual effects:
+
+```lua
+_G.AntiLag = true          -- Removes animations, projectiles, and enemies visually
+```
+
+This improves performance on slower computers without affecting gameplay!
+
+---
+
+## Discord Webhooks (Optional)
+
+Webhooks let the script send you updates to Discord when matches finish!
+
+### Setup
+
+```lua
+_G.SendWebhook = false 
+_G.Webhook = "WEBHOOK_URL_HERE"
+```
+
+### How to Set Up Discord Webhooks
+
+1. **`_G.SendWebhook`** - Turn notifications on/off
+   - `true` = You'll get Discord messages when matches end
+   - `false` = No Discord messages
+
+2. **`_G.Webhook`** - Your Discord webhook link
+   - Replace `"WEBHOOK_URL_HERE"` with your actual Discord webhook URL
+   - The URL should look something like: `https://discord.com/api/webhooks/123456789/abcdefg...`
+
+### Getting Your Webhook URL
+
+1. Go to your Discord server
+2. Right-click a channel → Edit Channel → Integrations → Webhooks
+3. Create a new webhook and copy the URL
+4. Paste it into the `_G.Webhook` setting
+
+### What You'll Receive
+
+When webhook notifications are enabled, you'll get Discord messages showing:
+- Match result (WIN or LOSS)
+- Coins and gems earned
+- Bonus items collected
+- Session totals
+- Time completed
+- Current level and wave reached
 
 ---
 
@@ -502,6 +626,16 @@ For completely hands-off play, add the script to your executor's **Autoexec** fo
 
 ## Troubleshooting & Tips
 
+### "No HTTP Function" Error
+
+**Problem:** Script fails with "No HTTP Function" message
+
+**Solution:** Your executor doesn't support HTTP requests. Use one of these instead:
+- Wave
+- Xeno
+- Delta
+- Arceus X
+
 ### Towers Not Placing
 
 **Problem:** Towers don't appear on the map
@@ -530,6 +664,16 @@ TDS:Sell(1)               -- Tower A is gone
 3. Is the URL the "Raw" webhook link (not a regular channel invite)?
 4. If script freezes at match end, your webhook URL might be invalid
 
+### Multiplayer Not Connecting
+
+**Problem:** Players can't join your multiplayer game
+
+**Solution:** 
+1. Make sure all players use the **exact same party code**
+2. The host must have VIP to select maps
+3. All players must use compatible difficulty settings
+4. Check that everyone is in the same lobby screen at the same time
+
 ---
 
 ## Quick Start Example
@@ -537,29 +681,33 @@ TDS:Sell(1)               -- Tower A is gone
 Here's a simple complete example to get you started:
 
 ```lua
--- Configuration
+-- ===== CONFIGURATION =====
 _G.AutoStrat = true
 _G.AutoSkip = false
 _G.AutoPickups = true
 
--- Load library
+-- ===== LOAD LIBRARY =====
 local TDS = loadstring(game:HttpGet("https://raw.githubusercontent.com/DuxiiT/auto-strat/refs/heads/main/Library.lua"))()
 TDS:Addons()
 
--- Setup your game
+-- ===== LOBBY SETUP =====
 TDS:Loadout("Mercenary Base", "Military Base", "Ranger", "Accelerator", "Engineer")
 TDS:Mode("Hardcore")
 TDS:GameInfo("Simplicity", {})
 
--- Build your strategy (example)
-TDS:Place("Mercenary Base", 0.7064, 1.8626, 42.2678, 1,0,0,0,1,0,0,0,1) -- 1
-TDS:Place("Military Base", 5.2, 1.8626, 35.5, 1,0,0,0,1,0,0,0,1) -- 2
+-- ===== STRATEGY (IN-GAME) =====
+TDS:Place("Mercenary Base", 0.7064, 1.8626, 42.2678) -- 1
+TDS:Place("Military Base", 5.2, 1.8626, 35.5) -- 2
+TDS:Place("Ranger", 10.1, 1.8626, 28.0) -- 3
+TDS:Place("Accelerator", 15.3, 1.8626, 20.5) -- 4
+TDS:Place("Engineer", 20.5, 1.8626, 13.0) -- 5
 
 -- Upgrade towers
 TDS:Upgrade(1)
 TDS:Upgrade(2)
+TDS:Upgrade(3)
 
--- Set special targeting
+-- Set targeting
 TDS:SetTarget(1, "Strong")
 
 -- Use abilities
@@ -577,18 +725,15 @@ Here's all the global settings in one place:
 | `_G.AutoStrat` | bool | `true` | Enable automatic strategy execution |
 | `_G.AutoSkip` | bool | `true` | Auto-skip waves |
 | `_G.AutoPickups` | bool | `true` | Auto-collect dropped items |
+| `_G.AntiLag` | bool | `true` | Reduce lag |
 | `_G.SendWebhook` | bool | `true` | Send match results to Discord |
 | `_G.Webhook` | string | `""` | Your Discord webhook URL |
 | `_G.AntiLag` | bool | `true` | Reduce lag |
 
 ---
 
-## Copyright
+## CREDITS TO:
 
-**TDS AutoStrat** 
-BIG CREDITS TO DuxiiT
-https://github.com/DuxiiT/auto-strat/tree/main
-
----
+TDS AutoStrat BIG CREDITS TO DuxiiT https://github.com/DuxiiT/auto-strat/tree/main
 
 **Questions?** Make sure to check the examples above. If you're still confused about a concept, it's probably explained earlier in this guide!
