@@ -585,8 +585,9 @@ Here's all the global settings in one place:
 
 ## Copyright
 
-**TDS AutoStrat** - Copyright 2025 DUXII  
-Personal use only. Do not redistribute without permission.
+**TDS AutoStrat** 
+BIG CREDITS TO DuxiiT
+https://github.com/DuxiiT/auto-strat/tree/main
 
 ---
 
